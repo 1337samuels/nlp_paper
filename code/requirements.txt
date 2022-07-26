@@ -1,0 +1,5 @@
+transformers==2.6.0 
+tensorboardX 
+boto3 
+sacremoses 
+pytorch-transformers
