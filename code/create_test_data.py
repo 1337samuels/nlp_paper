@@ -196,14 +196,14 @@ def get_abstracts(data_file, category):
         paper_dict = json.loads(paper)
         cats = paper_dict.get('categories').split(" ")
         abstract = paper_dict.get('abstract')
-        if abstract not in abstract_texts and category in cats:
+        if abstract not in abstract_texts and any(cat.startswith(category) for cat in cats):
             abstract_texts.add(abstract)
             yield paper_dict.get('abstract')
 
 
 def write_abstracts(cleaned_abstracts, output_dir):
     train_abstracts, test_abstracts = train_test_split(
-        cleaned_abstracts, test_size=0.1, random_state=42)
+        list(cleaned_abstracts), test_size=0.1, random_state=42)
     with open(os.path.join(output_dir, "test.txt"), 'w') as f:
         f.writelines(map(lambda x: x + '\n', test_abstracts))
     with open(os.path.join(output_dir, "train.txt"), 'w') as f:
@@ -212,7 +212,9 @@ def write_abstracts(cleaned_abstracts, output_dir):
 
 def create_dataset(data_file: str, target_category: str, output_dir: str):
     print('Reading from:', data_file)
-    print('Using category:', CATEGORY_MAP[target_category])
+    for category in CATEGORY_MAP:
+        if category.startswith(target_category):
+            print('Using category:', CATEGORY_MAP[category])
     print('Output dir:', output_dir)
     abstract_texts = get_abstracts(data_file, target_category)
     cleaned_abstracts = clean_abstracts(abstract_texts)
@@ -231,7 +233,7 @@ def main():
     parser.add_argument("--output-dir", default=None, type=str,
                         help="The directory in which to store the output")
     args = parser.parse_args()
-    create_dataset(args.data_file, args.category, args.output_dir)
+    create_dataset(args.arxiv_data_file, args.category, args.output_dir)
 
 
 if __name__ == "__main__":
