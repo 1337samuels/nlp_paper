@@ -7,3 +7,10 @@ fi
 
 chmod 600 ~/.kaggle/kaggle.json
 kaggle datasets download -d Cornell-University/arxiv
+
+mkdir -p optagan/data/arxiv_data/
+mkdir -p ../input/arxiv
+unzip arxiv.zip -d ../input/arxiv
+rm arxiv.zip
+
+python create_test_data.py --category cs --arxiv-data-file ../input/arxiv/arxiv-metadata-oai-snapshot.json --output-dir optagan/data/arxiv_data/

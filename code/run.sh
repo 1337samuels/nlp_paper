@@ -2,7 +2,7 @@
 
 LATENT_SIZE=${LATENT_SIZE:=32}
 BETA=${BETA:=0}
-BLOCK_SIZE=${BLOCK_SIZE:=100}
+BLOCK_SIZE=${BLOCK_SIZE:=150}
 CHECKPOINT_DIR=${CHECKPOINT_DIR:=./arxiv_model}
 OUTPUT_DIR=${OUTPUT_DIR:=./gandirectory}
 TRAIN_FILE=${TRAIN_FILE:=optagan/data/arxiv_data/train.txt}
