@@ -319,7 +319,8 @@ def main():
                         help="Test only a single dimension")
 
     args = parser.parse_args()
-
+    args.dataset = 'snli'
+    args.use_philly = False
     args.device = torch.device(
         "cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
     args.n_gpu = torch.cuda.device_count()

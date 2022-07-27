@@ -82,6 +82,7 @@ python optagan/optagan/optagan.py \
 ### Evaluation
 We haven't yet developed a formal metric for measuring the creativity or viability of the generated abstracts. However for our experiments we used the script:
 ```sh
+cp test_dimensions.py optagan/optagan # For local imports
 python test_dimensions.py
     --checkpoint_dir=$OUTPUT_DIR \
     --output_dir=./new_output \
@@ -95,6 +96,23 @@ python test_dimensions.py
     --block_size $BLOCK_SIZE \
     --max_seq_length 100 \
     --latent_size $LATENT_SIZE
+```
+To calcualte the latent space of all the vectors in the test set (can be used for later analysis):
+```sh
+mkdir ./new_output
+cp  calculate_latent_space.py optagan/optagan # For local imports
+python optagan/optagan/calculate_latent_space.py \
+    --checkpoint_dir=$OUTPUT_DIR \
+    --output-file=$OUTPUT_FILE \
+    --encoder_model_type=bert \
+    --encoder_model_name_or_path=bert-base-cased \
+    --decoder_model_type=gpt2 \
+    --decoder_model_name_or_path=gpt2 \
+    --block_size 100 \
+    --max_seq_length 100 \
+    --latent_size $LATENT_SIZE \
+    --global_step_eval 10966 \
+    --eval_data_file=$TEST_FILE
 ```
 ### Generation
 Although we mainly use the VAE, we have also trained a GAN so we can generate new abstracts (which are pretty believable). we can use the following generation code from the original Optagan paper.

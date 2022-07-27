@@ -48,7 +48,7 @@ def build_dataload_and_cache_examples(args, tokenizer):
     from utils import (BucketingDataLoader)
 
     assert isinstance(tokenizer, list)
-    args.batch_size = args.per_gpu_eval_batch_size * max(1, args.n_gpu)
+    args.batch_size = 1 * max(1, args.n_gpu)
     file_path = args.eval_data_file
     dataloader = BucketingDataLoader(
         file_path, args.batch_size, args.max_seq_length, tokenizer, args, bucket=100, shuffle=False)
@@ -64,7 +64,7 @@ def evaluate_latent_space(args, model_encoder, encoder_tokenizer, decoder_tokeni
     # Eval!
     logger.info("***** Running recontruction evaluation {} *****".format(prefix))
     logger.info("  Num examples = %d", len(eval_dataloader))
-    logger.info("  Batch size = %d", args.per_gpu_eval_batch_size)
+    logger.info("  Batch size = %d", 1)
 
     model_encoder.eval()
 
@@ -176,7 +176,7 @@ def main():
     model_encoder = encoder_model_class.from_pretrained(
         output_encoder_dir, latent_size=args.latent_size)
     tokenizer_encoder = encoder_tokenizer_class.from_pretrained(
-        args.encoder_tokenizer_name if args.encoder_tokenizer_name else args.encoder_model_name_or_path, do_lower_case=args.do_lower_case)
+        args.encoder_tokenizer_name if args.encoder_tokenizer_name else args.encoder_model_name_or_path, do_lower_case=True)
 
     model_encoder.to(args.device)
     if args.block_size <= 0:
@@ -191,7 +191,7 @@ def main():
     model_decoder = decoder_model_class.from_pretrained(
         output_decoder_dir, latent_size=args.latent_size)
     tokenizer_decoder = decoder_tokenizer_class.from_pretrained(
-        args.decoder_tokenizer_name if args.decoder_tokenizer_name else args.decoder_model_name_or_path, do_lower_case=args.do_lower_case)
+        args.decoder_tokenizer_name if args.decoder_tokenizer_name else args.decoder_model_name_or_path, do_lower_case=True)
     model_decoder.to(args.device)
     if args.block_size <= 0:
         # Our input block size will be the max possible for the model
@@ -202,12 +202,14 @@ def main():
                            'bos_token': '<BOS>', 'eos_token': '<EOS>'}
     num_added_toks = tokenizer_decoder.add_special_tokens(special_tokens_dict)
     print('We have added', num_added_toks, 'tokens to GPT2')
+    args.dataset = 'snli'
+    args.use_philly = False
     # Notice: resize_token_embeddings expect to receive the full size of the new vocabulary, i.e. the length of the tokenizer.
     model_decoder.resize_token_embeddings(len(tokenizer_decoder))
     assert tokenizer_decoder.pad_token == '<PAD>'
 
     results = evaluate_latent_space(
-        args, model_encoder, model_decoder, tokenizer_encoder, tokenizer_decoder)
+        args, model_encoder, tokenizer_encoder, tokenizer_decoder)
 
     with open(args.output_file, 'w') as f:
         for result in results.values():
