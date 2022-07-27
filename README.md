@@ -80,7 +80,7 @@ python optagan/optagan/optagan.py \
     --do_lower_case
 ```
 ### Evaluation
-We haven't yet developed a formal metric for measuring the creativity or viability of the generated abstracts. However for our experiments we used the script:
+We haven't yet developed a formal metric for measuring the creativity or viability of the generated abstracts. However for our experiments we used the following script:
 ```sh
 cp test_dimensions.py optagan/optagan # For local imports
 python test_dimensions.py
@@ -97,6 +97,7 @@ python test_dimensions.py
     --max_seq_length 100 \
     --latent_size $LATENT_SIZE
 ```
+* Note that this can be run for one dimension or multiple.
 To calcualte the latent space of all the vectors in the test set (can be used for later analysis):
 ```sh
 mkdir ./new_output
