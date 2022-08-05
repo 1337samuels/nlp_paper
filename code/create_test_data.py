@@ -226,7 +226,6 @@ def main():
 
     # Required parameters
     parser.add_argument("--category", default=None, type=str, required=True,
-                        choices=CATEGORY_MAP.keys(),
                         help="The category to fine tune the model.")
     parser.add_argument("--arxiv-data-file", default=None, type=str,
                         help="The file in which the metadata is stored")
