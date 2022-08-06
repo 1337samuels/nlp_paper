@@ -1,4 +1,5 @@
-# Name TBD
+# Predicting New Paper Abstracts Using
+VAE-GAN
 
 This repository contains the code of the paper: [Name TBD](https://www.overleaf.com/project/62d6c596e95fd04807c23c2b)
 
